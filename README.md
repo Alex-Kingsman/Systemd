@@ -3,12 +3,9 @@ Systemd
 
 создаём файл с конфигурацией
 
-nano /etc/default/watchlog
 
 cat /etc/default/watchlog
-
 WORD="ALERT"
-
 LOG=/var/log/watchlog.log
 
 
