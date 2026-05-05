@@ -13,44 +13,49 @@ LOG=/var/log/watchlog.log
 
 
 
-Cоздаем /var/log/watchlog.log и пишем туда строки на своё усмотрение,
-плюс ключевое слово ‘ALERT’
+Cоздаем /var/log/watchlog.log 
 
-nano /var/log/watchlog.log
+
 
 cat /var/log/watchlog.log
+
 asd
-asd
-asd
-asd
-asd
-as
+
 dasd
+
 ALERT
 
 
 
-Cоздадим скрипт:
- cat /opt/watchlog.sh
+Cоздадим скрипт: 
+
 #!/bin/bash
 
 WORD=$1
+
 LOG=$2
+
 DATE=$(date)
 
 if [ -z "$WORD" ] || [ -z "$LOG" ]; then
+
   echo "Usage: $0 <word> <logfile>"
+  
   exit 1
+  
 fi
 
 if grep -q "$WORD" "$LOG"
+
 then
+
   logger "$DATE: I found word, Master!"
+  
 else
+
   exit 0
+  
 fi
-
-
 
 
 Добавим права на запуск файла:
@@ -62,26 +67,36 @@ chmod +x /opt/watchlog.sh
 Создадим юнит для сервиса:
 
 cat  /etc/systemd/system/watchlog.service
+
 [Unit]
+
 Description=My watchlog service
 
 [Service]
+
 Type=oneshot
+
 EnvironmentFile=/etc/default/watchlog
+
 ExecStart=/opt/watchlog.sh $WORD $LOG
 
 
 Создадим юнит для таймера:
+
 cat /etc/systemd/system/watchlog.timer
+
 [Unit]
+
 Description=Run watchlog script every 30 second
 
 [Timer]
-# Run every 30 second
+
 OnUnitActiveSec=30
+
 Unit=watchlog.service
 
 [Install]
+
 WantedBy=multi-user.target
 
 
@@ -115,6 +130,8 @@ tail -n 1000 /var/log/syslog  | grep word
 
 
 
+
+
 Устанавливаем spawn-fcgi и необходимые для него пакеты:
 
 apt install spawn-fcgi php php-cgi php-cli \ apache2 libapache2-mod-fcgid -y
@@ -122,12 +139,18 @@ apt install spawn-fcgi php php-cgi php-cli \ apache2 libapache2-mod-fcgid -y
 
 создать файл с настройками
 
+
 cat /etc/spawn-fcgi/fcgi.conf
+
 SOCKET=/var/run/php-fcgi.sock
+
 OPTIONS="-u www-data -g www-data -s $SOCKET -S -M 0600 -C 32 -F 1 -- /usr/bin/php-cgi"
 
 
+
 sudo systemctl status spawn-fcgi
+
+
 ● spawn-fcgi.service - Spawn-fcgi startup service by Otus
      Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; disabled; preset: enabled)
      Active: active (running) since Tue 2026-05-05 12:10:53 UTC; 10s ago
@@ -174,12 +197,17 @@ May 05 12:10:53 srv systemd[1]: Started spawn-fcgi.service - Spawn-fcgi startup 
 
 
 
+
 Установим Nginx
+
  apt install nginx
 
 
+
 оздадим новый Unit
+
 /etc/systemd/system/nginx@.service
+
 
 
 необходимо создать два файла конфигурации 
@@ -187,11 +215,15 @@ May 05 12:10:53 srv systemd[1]: Started spawn-fcgi.service - Spawn-fcgi startup 
 etc/nginx/nginx-first.conf
 
 
+
 user www-data;
+
 worker_processes auto;
+
 pid /run/nginx-first.pid;
 
 events {
+
     worker_connections 768;
 }
 
@@ -263,6 +295,7 @@ http {
 
 
 systemctl start nginx@first
+
 systemctl start nginx@second
 
 
@@ -270,6 +303,7 @@ systemctl start nginx@second
 
 
 ps afx | grep nginx
+
 
 
 sudo ps afx | grep nginx
