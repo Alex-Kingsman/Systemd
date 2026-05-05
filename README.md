@@ -2,14 +2,13 @@ Systemd
 
 
 создаём файл с конфигурацией
+
 nano /etc/default/watchlog
 
 cat /etc/default/watchlog
-# Configuration file for my watchlog service
-# Place it to /etc/default
 
-# File and word in that file that we will be monit
 WORD="ALERT"
+
 LOG=/var/log/watchlog.log
 
 
