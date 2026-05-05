@@ -10,16 +10,14 @@ LOG=/var/log/watchlog.log
 
 
 
+
 Cоздаем /var/log/watchlog.log 
 
 
 
 cat /var/log/watchlog.log
-
 asd
-
 dasd
-
 ALERT
 
 
