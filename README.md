@@ -5,19 +5,16 @@ nano /etc/default/watchlog
 
 cat /etc/default/watchlog
 
-# Configuration file for my watchlog service
-
-# Place it to /etc/default
-
-# File and word in that file that we will be monit
-
 WORD="ALERT"
 LOG=/var/log/watchlog.log
+
 
 Cоздаем /var/log/watchlog.log и пишем туда строки на своё усмотрение,
 плюс ключевое слово ‘ALERT’
 
+
 nano /var/log/watchlog.log
+
 
 cat /var/log/watchlog.log
 asd
@@ -29,7 +26,9 @@ as
 dasd
 ALERT
 
+
 Cоздадим скрипт:
+
 cat /opt/watchlog.sh
 #!/bin/bash
 
@@ -49,11 +48,14 @@ else
 exit 0
 fi
 
+
 Добавим права на запуск файла:
 
 chmod +x /opt/watchlog.sh
 
+
 Создадим юнит для сервиса:
+
 
 cat  /etc/systemd/system/watchlog.service
 [Unit]
@@ -70,8 +72,6 @@ cat /etc/systemd/system/watchlog.timer
 Description=Run watchlog script every 30 second
 
 [Timer]
-
-# Run every 30 second
 
 OnUnitActiveSec=30
 Unit=watchlog.service
