@@ -25,36 +25,18 @@ ALERT
 Cоздадим скрипт: 
 
 #!/bin/bash
-
 WORD=$1
-
 LOG=$2
-
 DATE=$(date)
-
-if [ -z "$WORD" ] || [ -z "$LOG" ]; then
-
-  echo "Usage: $0 <word> <logfile>"
-  
-  exit 1
-  
-fi
-
 if grep -q "$WORD" "$LOG"
-
 then
-
-  logger "$DATE: I found word, Master!"
-  
+logger "$DATE: I found word, Master!"
 else
-
-  exit 0
-  
+exit 0
 fi
 
 
 Добавим права на запуск файла:
-
 chmod +x /opt/watchlog.sh
 
 
@@ -64,15 +46,10 @@ chmod +x /opt/watchlog.sh
 cat  /etc/systemd/system/watchlog.service
 
 [Unit]
-
 Description=My watchlog service
-
 [Service]
-
 Type=oneshot
-
 EnvironmentFile=/etc/default/watchlog
-
 ExecStart=/opt/watchlog.sh $WORD $LOG
 
 
@@ -81,17 +58,11 @@ ExecStart=/opt/watchlog.sh $WORD $LOG
 cat /etc/systemd/system/watchlog.timer
 
 [Unit]
-
 Description=Run watchlog script every 30 second
-
 [Timer]
-
 OnUnitActiveSec=30
-
 Unit=watchlog.service
-
 [Install]
-
 WantedBy=multi-user.target
 
 
